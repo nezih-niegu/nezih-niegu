@@ -25,7 +25,29 @@ HERO_KEY = {
     "lerobot-to-cosmos": "lerobot", "RobocupVision-SAM": "robocup", "Segkit": "segkit",
     "rust-without-shortcuts": "rust", "parallel-fashion-intelligence": "fashion", "mcp-mpi-benchmark": "mcp",
     "GPU-Compiler-Optimization": "compiler", "broker-realdata-test": "broker", "qse3-sim": "qse3"}
-TAG = {"neuro": "real EEG · MRI template · ECG · 3D brain mesh", "robotics": "robots rendered from their MuJoCo models",
+COURSES = ("Courses", "coursework behind the research: Tecnológico de Monterrey and Harvard", "", [
+    ("Computational Neuroscience", ["neuron models", "neural coding", "Python labs", "midterms + final"],
+     "Spiking dynamics from first principles (Hodgkin–Huxley shown)"),
+    ("Deep Learning for Biomedical Data", ["CNNs", "RNNs", "biomedical images", "clinical signals"],
+     "Harvard BMI 707 / EPI 290 labs and assignments"),
+    ("Surgical Data Science", ["Python", "CNNs", "PyTorch", "workflow recognition", "segmentation"],
+     "EDU4SDS: recognising phases and tools in surgical video"),
+    ("Computer Vision", ["YOLOv5 training", "ZED stereo depth", "detection with depth"],
+     "Object detection with metric distance from a stereo camera"),
+    ("Multiprocessing", ["CUDA", "MPI", "cuBLAS", "AVX2", "Monte Carlo π"],
+     "Parallel kernels from AVX2 intrinsics to CUDA + MPI"),
+    ("Compiler Design", ["Flex", "Bison", "PLY", "lexer", "parser"],
+     "From source text to a syntax tree"),
+    ("QSAR Data Science", ["molecular descriptors", "QSAR models", "R"],
+     "Structure–activity modelling of real molecules (T90 shown)"),
+    ("Econometrics and Data Science Lab", ["poverty indicators", "R", "Java", "maps"],
+     "Mapping poverty indicators across Mexico"),
+])
+COURSE_HERO = {"Computational Neuroscience": "c_neuro", "Deep Learning for Biomedical Data": "c_biomed",
+               "Surgical Data Science": "c_surgical", "Computer Vision": "c_cv", "Multiprocessing": "c_hpc",
+               "Compiler Design": "c_compiler", "QSAR Data Science": "c_qsar", "Econometrics and Data Science Lab": "c_econ"}
+HERO_KEY.update(COURSE_HERO)
+TAG = {"courses": "8 courses · notebooks, labs, projects","neuro": "real EEG · MRI template · ECG · 3D brain mesh", "robotics": "robots rendered from their MuJoCo models",
        "hpc": "real data · benchmark outputs · dataflow"}
 
 
@@ -52,7 +74,7 @@ def wrap(d, text, font, width):
     lines.append(cur); return lines
 
 
-def card(name, steps, result, cw):
+def card(name, steps, result, cw, sep="  →  ", fs=26):
     hh = int(cw * 560 / 1100)
     th = 168
     c = Image.new("RGBA", (cw, hh + th), CARD + (255,))
@@ -61,8 +83,8 @@ def card(name, steps, result, cw):
     c.alpha_composite(gradient(cw, 3), (0, hh))
     d = ImageDraw.Draw(c)
     x = 24; y = hh + 18
-    d.text((x, y), name, font=F("b", 26), fill=WHITE)
-    flow = "  →  ".join(s.replace("-<br>", "-").replace("<br>", " ").replace("Total-Segmentator", "TotalSegmentator") for s in steps)
+    d.text((x, y), name, font=F("b", fs), fill=WHITE)
+    flow = sep.join(s.replace("-<br>", "-").replace("<br>", " ").replace("Total-Segmentator", "TotalSegmentator") for s in steps)
     fy = y + 42
     for ln in wrap(d, flow, F("dm", 15), cw - 2 * x)[:2]:
         d.text((x, fy), ln, font=F("dm", 15), fill=SKY); fy += 24
@@ -75,10 +97,12 @@ def card(name, steps, result, cw):
 
 
 def area(key):
-    title, sub, _, projects = AREAS[key]
-    W, pad, gap, cols = 1800, 40, 24, 3
+    title, sub, _, projects = COURSES if key == "courses" else AREAS[key]
+    W, pad, gap = 1800, 40, 24
+    cols = 4 if key == "courses" else 3
     cw = (W - 2 * pad - (cols - 1) * gap) // cols
-    cards = [card(n, s, r, cw) for n, s, r in projects]
+    kw = dict(sep="  ·  ", fs=23) if key == "courses" else {}
+    cards = [card(n, s, r, cw, **kw) for n, s, r in projects]
     ch = cards[0].height
     rows = -(-len(cards) // cols)
     top = 170
@@ -111,5 +135,5 @@ def area(key):
 
 
 if __name__ == "__main__":
-    for k in AREAS:
+    for k in ["courses", *AREAS]:
         area(k)

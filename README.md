@@ -7,6 +7,21 @@ I like projects that are measured honestly: held-out evaluation, real baselines,
 
 ---
 
+### Courses
+
+![Courses](assets/abstract_courses.png)
+
+| Course | What's in it |
+|---|---|
+| [**Computational Neuroscience**](https://github.com/nezih-niegu/Courses/tree/main/Computational%20Neuroscience) | Neuron models and neural coding: Python labs, two midterms and a final project. |
+| [**Deep Learning for Biomedical Data**](https://github.com/nezih-niegu/Courses/tree/main/Deep%20Learning%20for%20Biomedical%20Data) | Harvard BMI 707 / EPI 290: CNN and RNN labs and assignments on biomedical data. |
+| [**Surgical Data Science**](https://github.com/nezih-niegu/Courses/tree/main/Surgical%20Data%20Science) | EDU4SDS lectures: Python, CNNs, PyTorch, surgical workflow recognition and semantic segmentation. |
+| [**Computer Vision**](https://github.com/nezih-niegu/Courses/tree/main/Computer%20Vision) | YOLOv5 training and detection with ZED stereo depth. |
+| [**Multiprocessing**](https://github.com/nezih-niegu/Courses/tree/main/Multiprocessing) | CUDA, MPI, cuBLAS and AVX2 kernels: matrix multiplication and Monte Carlo π. |
+| [**Compiler Design**](https://github.com/nezih-niegu/Courses/tree/main/Compiler%20Design) | Lexers and parsers with Flex/Bison and PLY. |
+| [**QSAR Data Science**](https://github.com/nezih-niegu/Courses/tree/main/QSAR%20Data%20Science) | Quantitative structure–activity modelling in R. |
+| [**Econometrics and Data Science Lab**](https://github.com/nezih-niegu/Courses/tree/main/Econometrics%20and%20Data%20Science%20Lab) | Poverty indicators mapped across Mexico, in R and Java. |
+
 ### Neuro & medical AI
 
 ![Neuro & medical AI](assets/abstract_neuro.png)

@@ -438,6 +438,163 @@ JOBS = dict(
     broker=lambda: recolored("broker.png", "broker", (0, 0, 640, 690)),
 )
 
+
+
+# ---------------------------------------------------------------- courses
+def hh():
+    """Hodgkin-Huxley neuron under step current (classic parameters)."""
+    dt, T = 0.01, 120; n_ = int(T / dt); t = np.arange(n_) * dt
+    I = np.where((t > 10) & (t < 100), 10.0, 0.0)
+    V, m, h, n = -65.0, 0.05, 0.6, 0.32; Vs = np.empty(n_)
+    for k in range(n_):
+        am = 0.1 * (V + 40) / (1 - np.exp(-(V + 40) / 10)); bm = 4 * np.exp(-(V + 65) / 18)
+        ah = 0.07 * np.exp(-(V + 65) / 20); bh = 1 / (1 + np.exp(-(V + 35) / 10))
+        an = 0.01 * (V + 55) / (1 - np.exp(-(V + 55) / 10)); bn = 0.125 * np.exp(-(V + 65) / 80)
+        m += dt * (am * (1 - m) - bm * m); h += dt * (ah * (1 - h) - bh * h); n += dt * (an * (1 - n) - bn * n)
+        INa = 120 * m ** 3 * h * (V - 50); IK = 36 * n ** 4 * (V + 77); IL = 0.3 * (V + 54.4)
+        V += dt * (I[k] - INa - IK - IL); Vs[k] = V
+    f = base(xaxis=dict(visible=False, range=[0, T]), yaxis=dict(visible=False, range=[-95, 60]))
+    f.add_trace(go.Scatter(x=t, y=-88 + I * 0.6, mode="lines", line=dict(color="rgba(186,230,253,0.6)", width=2)))
+    for w, a in [(14, 0.08), (7, 0.2)]:
+        f.add_trace(go.Scatter(x=t, y=Vs, mode="lines", line=dict(color=f"rgba(167,139,250,{a})", width=w)))
+    f.add_trace(go.Scatter(x=t, y=Vs, mode="lines", line=dict(color=VIO, width=2.6)))
+    save(f, "c_neuro")
+
+
+def montecarlo():
+    rng = np.random.default_rng(7); p = rng.random((40000, 2)); inside = (p ** 2).sum(1) <= 1
+    f = base(xaxis=dict(visible=False, range=[-0.95, 1.95]), yaxis=dict(visible=False, range=[-0.02, 1.02], scaleanchor="x"))
+    f.add_trace(go.Scattergl(x=p[inside, 0], y=p[inside, 1], mode="markers", marker=dict(size=2, color=FUC, opacity=0.7)))
+    f.add_trace(go.Scattergl(x=p[~inside, 0], y=p[~inside, 1], mode="markers", marker=dict(size=2, color=CYA, opacity=0.6)))
+    th = np.linspace(0, np.pi / 2, 100)
+    f.add_trace(go.Scatter(x=np.cos(th), y=np.sin(th), mode="lines", line=dict(color="white", width=2)))
+    f.add_annotation(x=-0.45, y=0.5, text=f"π ≈ {4 * inside.mean():.4f}", showarrow=False,
+                     font=dict(size=40, color="white", family="Ubuntu Mono"))
+    save(f, "c_hpc")
+
+
+def molecule():
+    lines = open(os.path.join(IMG, "T90.mol2")).read().split("@<TRIPOS>")
+    atoms = [l.split() for l in [b for b in lines if b.startswith("ATOM")][0].splitlines()[1:] if l.strip()]
+    bonds = [l.split() for l in [b for b in lines if b.startswith("BOND")][0].splitlines()[1:] if l.strip()]
+    xyz = np.array([[float(a[2]), float(a[3]), float(a[4])] for a in atoms]); el = [a[5].split(".")[0] for a in atoms]
+    xyz = xyz - xyz.mean(0); xyz = xyz @ np.linalg.svd(xyz, full_matrices=False)[2].T   # principal axes
+    col = {"C": "#c4b5fd", "O": "#f472b6", "N": "#67e8f9", "H": "#e5e7eb", "S": "#facc15", "Cl": "#86efac", "F": "#86efac"}
+    size = {"H": 7, "C": 14, "O": 15, "N": 15, "S": 17}
+    z = (xyz[:, 2] - xyz[:, 2].min()) / (np.ptp(xyz[:, 2]) + 1e-9)
+    span = np.ptp(xyz[:, :2], 0); cx, cy = xyz[:, :2].min(0) + span / 2
+    half = max(span[0] / 2 / (W / H), span[1] / 2) * 1.18
+    f = base(xaxis=dict(visible=False, range=[cx - half * W / H, cx + half * W / H]),
+             yaxis=dict(visible=False, range=[cy - half, cy + half]))
+    for b in bonds:
+        i_, j_ = int(b[1]) - 1, int(b[2]) - 1
+        f.add_trace(go.Scatter(x=xyz[[i_, j_], 0], y=xyz[[i_, j_], 1], mode="lines",
+                               line=dict(color="rgba(186,230,253,0.55)", width=5 if b[3] in ("2", "ar") else 3)))
+    for k in np.argsort(xyz[:, 2]):
+        e = el[k]
+        f.add_trace(go.Scatter(x=[xyz[k, 0]], y=[xyz[k, 1]], mode="markers",
+                               marker=dict(size=size.get(e, 14) * (1.6 + 0.8 * z[k]), color=col.get(e, "#a78bfa"),
+                                           opacity=0.55 + 0.45 * z[k], line=dict(color="white", width=1.2))))
+    save(f, "c_qsar")
+
+
+def detection():
+    c = glow_bg(color=(103, 232, 249), a=0.2)
+    im = Image.open(os.path.join(IMG, "anymal.png")).convert("RGBA")
+    from PIL import ImageDraw, ImageFont
+    shadow(c, 420, 505, 170, 16); place(c, im, 420, 300, h=440)
+    im2 = Image.open(os.path.join(IMG, "go2.png")).convert("RGBA"); shadow(c, 830, 490, 120, 14); place(c, im2, 830, 330, h=300)
+    d = ImageDraw.Draw(c); fnt = ImageFont.truetype("/usr/share/fonts/truetype/ubuntu/UbuntuMono-R.ttf", 26)
+    for (x0, y0, x1, y1, lab, col) in [(200, 70, 650, 530, "robot 0.94  z=2.1 m", (217, 70, 239)),
+                                       (680, 170, 990, 490, "robot 0.91  z=3.4 m", (103, 232, 249))]:
+        d.rectangle((x0, y0, x1, y1), outline=col + (255,), width=4)
+        tw = d.textlength(lab, font=fnt); d.rectangle((x0, y0 - 36, x0 + tw + 16, y0), fill=col + (255,))
+        d.text((x0 + 8, y0 - 33), lab, font=fnt, fill=(10, 10, 16))
+    c.save(os.path.join(OUT, "c_cv.png")); print("c_cv")
+
+
+def parse_tree():
+    N = {"=": (5, 4), "x": (3, 3), "+": (7, 3), "*": (5.6, 2), "4": (8.4, 2), "a": (4.6, 1), "(b-c)": (6.6, 1)}
+    E = [("=", "x"), ("=", "+"), ("+", "*"), ("+", "4"), ("*", "a"), ("*", "(b-c)")]
+    f = base(xaxis=dict(visible=False, range=[0, 10.5]), yaxis=dict(visible=False, range=[0.1, 5.4]))
+    f.add_annotation(x=5.25, y=5.0, text="x = a * (b - c) + 4 ;", showarrow=False,
+                     font=dict(size=34, color=SKY, family="Ubuntu Mono"))
+    for a, b in E:
+        f.add_trace(go.Scatter(x=[N[a][0], N[b][0]], y=[N[a][1], N[b][1]], mode="lines",
+                               line=dict(color="rgba(167,139,250,0.7)", width=3)))
+    for k, (x, y) in N.items():
+        op = k in "=+*"
+        f.add_trace(go.Scatter(x=[x], y=[y], mode="markers+text", text=[f"<b>{k}</b>"],
+                               textfont=dict(size=24 if op else 20, color="white"),
+                               marker=dict(size=64 if len(k) < 3 else 92, color="rgba(217,70,239,0.35)" if op else "#12121c",
+                                           line=dict(color=FUC if op else CYA, width=3))))
+    save(f, "c_compiler")
+
+
+def mexico():
+    f = base()
+    f.add_trace(go.Choropleth(locations=["MEX"], z=[1], colorscale=[[0, "rgba(167,139,250,0.55)"], [1, "rgba(167,139,250,0.55)"]],
+                              showscale=False, marker=dict(line=dict(color=FUC, width=2.5))))
+    rng = np.random.default_rng(4)
+    lon, lat = rng.uniform(-115, -88, 220), rng.uniform(15.5, 31, 220)
+    f.add_trace(go.Scattergeo(lon=lon, lat=lat, mode="markers", marker=dict(size=4, color=CYA, opacity=0.0)))
+    f.update_geos(fitbounds="locations", visible=False, bgcolor=BG, showcountries=True, countrycolor="rgba(186,230,253,0.25)",
+                  showland=True, landcolor="#15151f", showocean=False, projection_type="mercator")
+    save(f, "c_econ")
+
+
+def biomed_cnn():
+    from nilearn import datasets, image
+    t1 = image.get_data(datasets.load_mni152_template(resolution=1)).astype(float); t1 /= np.percentile(t1, 99.5)
+    sl = np.clip(np.rot90(t1[:, :, t1.shape[2] // 2 + 10]), 0, 1)
+    c = glow_bg(a=0.18)
+    from PIL import ImageDraw
+    base_im = Image.fromarray((sl * 235).astype(np.uint8)).convert("RGBA")
+    base_im.putalpha(Image.fromarray(((sl > 0.04) * 255).astype(np.uint8)))
+    base_im = base_im.resize((300, 360))
+    c.alpha_composite(base_im, (60, 100))
+    d = ImageDraw.Draw(c)
+    cols = [(167, 139, 250), (217, 70, 239), (103, 232, 249)]
+    for L, (x0, n, s) in enumerate([(430, 6, 200), (640, 10, 130), (820, 16, 70)]):
+        for k in range(n):
+            off = k * (12 if L < 2 else 8)
+            d.rectangle((x0 + off, 130 + off * 0.6, x0 + off + s, 130 + off * 0.6 + s * 1.2), outline=cols[L] + (200,),
+                        fill=(18, 18, 28, 255), width=2)
+    for i in range(10):
+        y = 120 + i * 34
+        d.ellipse((1010, y, 1034, y + 24), fill=(217, 70, 239, 255) if i == 3 else (60, 60, 80, 255))
+    for x0, x1 in [(365, 425), (595, 635), (790, 815), (960, 1005)]:
+        d.line([(x0, 280), (x1, 280)], fill=(186, 230, 253, 200), width=3)
+    c.save(os.path.join(OUT, "c_biomed.png")); print("c_biomed")
+
+
+def surgical():
+    phases = [("prep", 0, 9, "#a78bfa"), ("dissection", 9, 38, "#d946ef"), ("clipping", 38, 52, "#67e8f9"),
+              ("cutting", 52, 61, "#f0abfc"), ("retraction", 61, 84, "#818cf8"), ("cleanup", 84, 100, "#bae6fd")]
+    f = base(xaxis=dict(visible=False, range=[-3, 103]), yaxis=dict(visible=False, range=[-1.4, 3.6]))
+    rng = np.random.default_rng(2)
+    for row, noise in [(2.2, 0.0), (0.8, 1.0)]:
+        for name, a, b, col in phases:
+            f.add_shape(type="rect", x0=a, x1=b, y0=row, y1=row + 0.9, fillcolor=col, line=dict(color=BG, width=2))
+            if noise == 0 and b - a > 8:
+                f.add_annotation(x=(a + b) / 2, y=row + 0.45, text=name, showarrow=False, font=dict(color="#0b0b12", size=20))
+        if noise:
+            for k in range(14):
+                x = rng.uniform(5, 95)
+                f.add_shape(type="rect", x0=x, x1=x + rng.uniform(0.6, 2), y0=row, y1=row + 0.9, fillcolor="#0b0b12", line_width=0)
+    f.add_annotation(x=-2, y=2.65, text="truth", showarrow=False, xanchor="right", font=dict(color="#9ca3af", size=18))
+    f.add_annotation(x=-2, y=1.25, text="CNN", showarrow=False, xanchor="right", font=dict(color="#9ca3af", size=18))
+    f.update_xaxes(range=[-10, 103])
+    for x in np.linspace(0, 100, 11):
+        f.add_shape(type="line", x0=x, x1=x, y0=-0.4, y1=-0.15, line=dict(color="#9ca3af", width=2))
+    f.add_annotation(x=50, y=-0.9, text="surgical video timeline", showarrow=False, font=dict(color="#9ca3af", size=18))
+    save(f, "c_surgical")
+
+
+JOBS.update(c_neuro=hh, c_hpc=montecarlo, c_qsar=molecule, c_cv=detection, c_compiler=parse_tree, c_econ=mexico,
+            c_biomed=biomed_cnn, c_surgical=surgical)
+
+
 if __name__ == "__main__":
     os.environ.setdefault("MUJOCO_GL", "egl")
     sys.path.insert(0, HERE)
