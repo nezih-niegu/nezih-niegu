@@ -1,6 +1,4 @@
-I build systems where learning meets the physical world: brain signals that adapt robot training, legged and humanoid robots that learn to move, and medical-imaging pipelines that turn raw scans into clinical reports. MCC, Tecnológico de Monterrey.
-
-I like projects that are measured honestly: held-out evaluation, real baselines, and a clear statement of what a result does *not* show.
+I build systems where learning meets the physical world: brain signals that adapt robot training, legged and humanoid robots that learn to move, and medical-imaging pipelines that turn raw scans into clinical reports. I like projects that are measured honestly: held-out evaluation, real baselines, and a clear statement of what a result does *not* show.
 
 ---
 
