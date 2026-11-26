@@ -9,7 +9,7 @@ I like projects that are measured honestly: held-out evaluation, real baselines,
 
 ### Neuro & medical AI
 
-![Neuro & medical AI](assets/area_neuro.png)
+![Neuro & medical AI](assets/abstract_neuro.png)
 
 | Project | What it does |
 |---|---|
@@ -21,7 +21,7 @@ I like projects that are measured honestly: held-out evaluation, real baselines,
 
 ### Robotics & control
 
-![Robotics & control](assets/area_robotics.png)
+![Robotics & control](assets/abstract_robotics.png)
 
 | Project | What it does |
 |---|---|
@@ -36,7 +36,7 @@ I like projects that are measured honestly: held-out evaluation, real baselines,
 
 ### HPC, systems & quantitative experiments
 
-![HPC, systems & quantitative experiments](assets/area_hpc.png)
+![HPC, systems & quantitative experiments](assets/abstract_hpc.png)
 
 | Project | What it does |
 |---|---|

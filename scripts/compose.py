@@ -105,7 +105,7 @@ def area(key):
         ImageDraw.Draw(sh).rounded_rectangle((20, 26, cw + 20, ch + 20), 18, fill=(0, 0, 0, 170))
         canvas.alpha_composite(sh.filter(ImageFilter.GaussianBlur(12)), (x0 - 20, y0 - 20))
         canvas.alpha_composite(cimg, (x0, y0))
-    out = os.path.join(ROOT, "assets", f"area_{key}.png")
+    out = os.path.join(ROOT, "assets", f"abstract_{key}.png")
     canvas.convert("RGB").save(out, optimize=True)
     print(out, canvas.size)
 
