@@ -4,8 +4,6 @@ I like projects that are measured honestly: held-out evaluation, real baselines,
 
 ---
 
-### Courses
-
 ![Courses](assets/abstract_courses.png)
 
 | Course | What's in it |
@@ -19,8 +17,6 @@ I like projects that are measured honestly: held-out evaluation, real baselines,
 | [**QSAR Data Science**](https://github.com/nezih-niegu/Courses/tree/main/QSAR%20Data%20Science) | Quantitative structure–activity modelling in R. |
 | [**Econometrics and Data Science Lab**](https://github.com/nezih-niegu/Courses/tree/main/Econometrics%20and%20Data%20Science%20Lab) | Poverty indicators mapped across Mexico, in R and Java. |
 
-### Neuro & medical AI
-
 ![Neuro & medical AI](assets/abstract_neuro.png)
 
 | Project | What it does |
@@ -30,8 +26,6 @@ I like projects that are measured honestly: held-out evaluation, real baselines,
 | [**heart-pignn**](https://github.com/nezih-niegu/heart-pignn) | Physics-informed graph neural network: ECG beats propagate over the cardiac conduction graph (SA → AV → His–Purkinje) for MIT-BIH beat classification and waveform regression. |
 | [**Trismegisto**](https://github.com/nezih-niegu/Trismegisto) | CT aorta segmentation (TotalSegmentator) and radiomic / morphological feature extraction. |
 | [**stretch-posture-coach**](https://github.com/nezih-niegu/stretch-posture-coach) | A Hello Robot Stretch 3 watches your posture (MediaPipe), scores RULA/REBA and spinal loads, and tells you out loud how to fix it; local LLM + offline voice, no cloud. |
-
-### Robotics & control
 
 ![Robotics & control](assets/abstract_robotics.png)
 
@@ -45,8 +39,6 @@ I like projects that are measured honestly: held-out evaluation, real baselines,
 | [**g1_cuda_lidar_benchmark**](https://github.com/nezih-niegu/g1_cuda_lidar_benchmark) | Unitree G1 head-LiDAR filtering and voxel mapping: CPU vs naive vs optimised CUDA, ROS 2 Humble + Jazzy. |
 | [**lerobot-to-cosmos**](https://github.com/nezih-niegu/lerobot-to-cosmos) | Converts a LeRobot v3 dataset into NVIDIA Cosmos video-SFT format, validated against the reference dataset. |
 | [**RobocupVision-SAM**](https://github.com/nezih-niegu/RobocupVision-SAM) · [**Segkit**](https://github.com/nezih-niegu/Segkit) | Robot-soccer team clustering with SAM + DINOv2; UNet segmentation from training to a real-time TensorRT Jetson Nano. |
-
-### HPC, systems & quantitative experiments
 
 ![HPC, systems & quantitative experiments](assets/abstract_hpc.png)
 
